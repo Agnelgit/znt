@@ -3,7 +3,21 @@ async function main() {
   const hre = require('hardhat');
   const ethers = hre.ethers;
 
-  const [deployer] = await ethers.getSigners();
+  // Determine deployer signer: use getSigners() on local networks, otherwise build a Wallet from private key
+  let deployer;
+  if (hre.network.name === 'hardhat' || hre.network.name === 'localhost') {
+    const signers = await ethers.getSigners();
+    deployer = signers[0];
+  } else {
+    const pk = process.env.DEPLOYER_PRIVATE_KEY;
+    if (!pk) {
+      throw new Error('DEPLOYER_PRIVATE_KEY is required for remote deployments');
+    }
+    // ethers in Hardhat context exposes JsonRpcProvider and Wallet in v6 as ethers.JsonRpcProvider / ethers.Wallet
+    const provider = new ethers.JsonRpcProvider(process.env.ARBITRUM_SEPOLIA_RPC || hre.network.config.url);
+    deployer = new ethers.Wallet(pk, provider);
+  }
+
   console.log('Deploying contracts with account:', deployer.address);
 
   const ZynqtraBadges = await ethers.getContractFactory('ZynqtraBadges');

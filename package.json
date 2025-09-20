@@ -7,7 +7,7 @@
     "dev": "next dev",
     "hardhat": "hardhat",
     "compile:contracts": "hardhat compile",
-    "deploy:arbsepolia": "hardhat run scripts/deploy.ts --network arbitrumSepolia",
+  "deploy:arbsepolia": "hardhat run scripts/deploy.js --network arbitrumSepolia",
     "deploy:local": "hardhat run scripts/deploy.js",
     "pin:deployments": "node scripts/pin-to-ipfs.js",
     "lint": "next lint",
